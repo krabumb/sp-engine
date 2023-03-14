@@ -1,0 +1,4 @@
+# ninja log v5
+6	416	7005090020946369	build.ninja	1de46269311aa196
+1	658	7005076252515012	CMakeFiles/sp_engine.dir/src/main.cpp.obj	82f58b70e0bd11eb
+662	969	7005076255564969	sp_engine.exe	1759a1a849f281bd

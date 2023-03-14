@@ -1,0 +1,3 @@
+C:/Users/cleme/Desktop/sp-engine/cmake-build-debug/CMakeFiles/sp_engine.dir
+C:/Users/cleme/Desktop/sp-engine/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/cleme/Desktop/sp-engine/cmake-build-debug/CMakeFiles/rebuild_cache.dir
