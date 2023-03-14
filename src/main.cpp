@@ -16,7 +16,7 @@ void changeSize(int w, int h) {
 
 float angle = 0.0f;
 
-void render() {
+void render(int) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
@@ -28,8 +28,13 @@ void render() {
     glVertex3f( 0.0f, 1.0f, 0.0);
     glEnd();
 
-    angle+=0.1f;
+    angle+=1.0f;
     glutSwapBuffers();
+    glutTimerFunc(1000/120, render, 0);
+}
+
+void start() {
+    glutTimerFunc(1000/120, render, 0);
 }
 
 int main(int argc, char **argv) {
@@ -39,9 +44,8 @@ int main(int argc, char **argv) {
     glutInitWindowSize(320,320);
     glutCreateWindow("SP Engine");
 
-    glutDisplayFunc(render);
+    glutDisplayFunc(start);
     glutReshapeFunc(changeSize);
-    glutIdleFunc(render);
 
     glutMainLoop();
     return 0;
