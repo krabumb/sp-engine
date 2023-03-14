@@ -14,15 +14,21 @@ void changeSize(int w, int h) {
     glMatrixMode(GL_MODELVIEW);
 }
 
+float angle = 0.0f;
+
 void render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+
+    glRotatef(angle, 0.0f, 1.0f, 0.0f);
 
     glBegin(GL_TRIANGLES);
-    glVertex3f(-0.5,-0.5,0.0);
-    glVertex3f(0.5,0.0,0.0);
-    glVertex3f(0.0,0.5,0.0);
+    glVertex3f(-1.0f,-1.0f, 0.0f);
+    glVertex3f( 1.0f, 0.0f, 0.0);
+    glVertex3f( 0.0f, 1.0f, 0.0);
     glEnd();
 
+    angle+=0.1f;
     glutSwapBuffers();
 }
 
@@ -35,6 +41,7 @@ int main(int argc, char **argv) {
 
     glutDisplayFunc(render);
     glutReshapeFunc(changeSize);
+    glutIdleFunc(render);
 
     glutMainLoop();
     return 0;
