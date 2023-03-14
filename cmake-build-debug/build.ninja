@@ -66,7 +66,7 @@ build CMakeFiles/sp_engine.dir/src/main.cpp.obj: CXX_COMPILER__sp_engine_Debug C
 
 build sp_engine.exe: CXX_EXECUTABLE_LINKER__sp_engine_Debug CMakeFiles/sp_engine.dir/src/main.cpp.obj
   FLAGS = -g
-  LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  LINK_LIBRARIES = -lopengl32  -g  -lfreeglut  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\sp_engine.dir
   POST_BUILD = cd .
   PRE_LINK = cd .

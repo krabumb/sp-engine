@@ -1,4 +1,12 @@
 # ninja log v5
-6	416	7005090020946369	build.ninja	1de46269311aa196
-1	658	7005076252515012	CMakeFiles/sp_engine.dir/src/main.cpp.obj	82f58b70e0bd11eb
-662	969	7005076255564969	sp_engine.exe	1759a1a849f281bd
+6	416	7005134999365767	build.ninja	1de46269311aa196
+2	428	7005133527170545	CMakeFiles/sp_engine.dir/src/main.cpp.obj	4b214c3e737bf0c9
+407	724	7005111786546234	sp_engine.exe	c5ccc99befe1389
+2	621	7005137771614820	CMakeFiles/sp_engine.dir/src/main.cpp.obj	4b214c3e737bf0c9
+623	877	7005137774054798	sp_engine.exe	c5ccc99befe1389
+3	291	7005137998264597	CMakeFiles/sp_engine.dir/src/main.cpp.obj	4b214c3e737bf0c9
+292	578	7005138001065371	sp_engine.exe	c5ccc99befe1389
+1	368	7005138320421045	CMakeFiles/sp_engine.dir/src/main.cpp.obj	4b214c3e737bf0c9
+369	612	7005138323087539	sp_engine.exe	c5ccc99befe1389
+2	281	7005138383685379	CMakeFiles/sp_engine.dir/src/main.cpp.obj	4b214c3e737bf0c9
+282	491	7005138385695371	sp_engine.exe	c5ccc99befe1389
