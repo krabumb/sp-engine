@@ -11,6 +11,6 @@ add_executable(sp_engine src/main.cpp)
 
 target_link_libraries(sp_engine ${OPENGL_LIBRAIRIES})
 target_link_libraries(sp_engine ${GLUT_LIBRAIRIES})
-target_link_libraries(sp_engine -lopengl32 -g -lfreeglut)
+target_link_libraries(sp_engine -lopengl32 -g -lfreeglut -lglu32)
 
 

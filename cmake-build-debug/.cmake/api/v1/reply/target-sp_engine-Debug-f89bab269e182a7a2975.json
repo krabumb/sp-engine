@@ -53,13 +53,16 @@
 			[
 				{
 					"fragment" : "-g -fdiagnostics-color=always"
+				},
+				{
+					"fragment" : "-std=gnu++14"
 				}
 			],
 			"includes" : 
 			[
 				{
 					"backtrace" : 3,
-					"path" : "C:/Users/cleme/Desktop/sp-engine/src"
+					"path" : "C:/Users/krabu/Desktop/sp-engine/src"
 				}
 			],
 			"language" : "CXX",
@@ -103,6 +106,11 @@
 			{
 				"backtrace" : 2,
 				"fragment" : "-lfreeglut",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "-lglu32",
 				"role" : "libraries"
 			},
 			{
