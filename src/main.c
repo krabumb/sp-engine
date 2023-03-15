@@ -4,6 +4,8 @@
 #include <GL/glut.h>
 #endif
 
+#include <stdio.h>
+
 typedef struct GLPoint {
     GLfloat posX;
     GLfloat posY;

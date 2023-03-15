@@ -82,7 +82,7 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="C:/Users/krabu/Desktop/sp-engine/src/main.cpp">
+		<Unit filename="C:/Users/krabu/Desktop/sp-engine/src/main.c">
 			<Option target="sp_engine"/>
 		</Unit>
 		<Unit filename="C:/Users/krabu/Desktop/sp-engine/CMakeLists.txt">
