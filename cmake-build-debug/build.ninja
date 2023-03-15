@@ -49,8 +49,8 @@ cmake_ninja_workdir = C$:/Users/cleme/Desktop/sp-engine/cmake-build-debug/
 
 build cmake_object_order_depends_target_sp_engine: phony || CMakeFiles/sp_engine.dir
 
-build CMakeFiles/sp_engine.dir/src/main.cpp.obj: CXX_COMPILER__sp_engine_Debug C$:/Users/cleme/Desktop/sp-engine/src/main.cpp || cmake_object_order_depends_target_sp_engine
-  DEP_FILE = CMakeFiles\sp_engine.dir\src\main.cpp.obj.d
+build CMakeFiles/sp_engine.dir/src/main.c.obj: C_COMPILER__sp_engine_Debug C$:/Users/cleme/Desktop/sp-engine/src/main.c || cmake_object_order_depends_target_sp_engine
+  DEP_FILE = CMakeFiles\sp_engine.dir\src\main.c.obj.d
   FLAGS = -g -fdiagnostics-color=always
   INCLUDES = -IC:/Users/cleme/Desktop/sp-engine/src
   OBJECT_DIR = CMakeFiles\sp_engine.dir
@@ -64,9 +64,9 @@ build CMakeFiles/sp_engine.dir/src/main.cpp.obj: CXX_COMPILER__sp_engine_Debug C
 #############################################
 # Link the executable sp_engine.exe
 
-build sp_engine.exe: CXX_EXECUTABLE_LINKER__sp_engine_Debug CMakeFiles/sp_engine.dir/src/main.cpp.obj
+build sp_engine.exe: C_EXECUTABLE_LINKER__sp_engine_Debug CMakeFiles/sp_engine.dir/src/main.c.obj
   FLAGS = -g
-  LINK_LIBRARIES = -lopengl32  -g  -lfreeglut  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  LINK_LIBRARIES = -lfreeglut  -lopengl32  -lglu32  -A  -lx64  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\sp_engine.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
