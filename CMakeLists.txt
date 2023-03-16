@@ -17,7 +17,7 @@ find_package(GLUT REQUIRED)
 include_directories(src)
 include_directories(${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS})
 
-add_executable(sp_engine src/main.c)
+add_executable(sp_engine src/main.c src/draw_shapes/drawLib.h src/draw_shapes/drawLib.c src/init/initEngine.c src/init/initEngine.h src/struct/structLib.h)
 
 target_link_libraries(sp_engine ${OPENGL_LIBRAIRIES})
 target_link_libraries(sp_engine ${GLUT_LIBRAIRIES})
