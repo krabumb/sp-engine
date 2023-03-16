@@ -70,30 +70,77 @@ void drawCube(GLPoint origin, GLfloat size) {
     drawSquare(bottomFaceVertices, colors[5]);
 }
 
-void drawPyramidBase3(GLPoint origin, GLfloat size){
+void drawPyramidBase3(GLPoint origin, GLfloat size) {
     float halfSize = size / 2.0f;
-    GLPoint triangleBase[3] = {
-            {origin.posX + halfSize,  origin.posY - halfSize, origin.posZ},
-            {origin.posX - halfSize, origin.posY - halfSize, origin.posZ - halfSize},
-            {origin.posX - halfSize, origin.posY - halfSize, origin.posZ + halfSize}
-    };
-    GLPoint triangleSideOne[3] = {
-            {origin.posX,  origin.posY + halfSize, origin.posZ},
-            {origin.posX - halfSize, origin.posY - halfSize, origin.posZ - halfSize},
-            {origin.posX - halfSize, origin.posY - halfSize, origin.posZ + halfSize}
-    };
-    GLPoint triangleSideTwo[3] = {
-            {origin.posX + halfSize,  origin.posY - halfSize, origin.posZ},
+
+    GLPoint vertices[4] = {
             {origin.posX, origin.posY + halfSize, origin.posZ},
+            {origin.posX + halfSize, origin.posY - halfSize, origin.posZ},
+            {origin.posX - halfSize, origin.posY - halfSize, origin.posZ - halfSize},
             {origin.posX - halfSize, origin.posY - halfSize, origin.posZ + halfSize}
     };
-    GLPoint triangleSideThree[3] = {
-            {origin.posX + halfSize,  origin.posY - halfSize, origin.posZ},
-            {origin.posX - halfSize, origin.posY - halfSize, origin.posZ - halfSize},
-            {origin.posX, origin.posY + halfSize, origin.posZ}
+
+    GLColor colors[4] = {
+            {1.0f, 0.0f, 0.0f}, // Red
+            {0.0f, 1.0f, 0.0f}, // Green
+            {0.0f, 0.0f, 1.0f}, // Blue
+            {1.0f, 0.0f, 1.0f}  // Magenta
     };
-    drawTriangle(triangleBase, (GLColor){1.0f, 0.0f, 0.0f});
-    drawTriangle(triangleSideOne, (GLColor){0.0f, 1.0f, 0.0f});
-    drawTriangle(triangleSideTwo, (GLColor){0.0f, 0.0f, 1.0f});
-    drawTriangle(triangleSideThree, (GLColor){1.0f, 0.0f, 1.0f});
+
+    int triangleIndices[4][3] = {
+            {1, 2, 3}, // Base triangle
+            {0, 2, 3}, // Side triangle 1
+            {1, 0, 3}, // Side triangle 2
+            {1, 2, 0}  // Side triangle 3
+    };
+
+    for (int i = 0; i < 4; i++) {
+        GLPoint triangle[3] = {
+                vertices[triangleIndices[i][0]],
+                vertices[triangleIndices[i][1]],
+                vertices[triangleIndices[i][2]]
+        };
+        drawTriangle(triangle, colors[i]);
+    }
+}
+
+void drawPyramidBase4(GLPoint origin, GLfloat size) {
+    float halfSize = size / 2.0f;
+
+    GLPoint vertices[5] = {
+            {origin.posX, origin.posY + halfSize, origin.posZ}, // Apex
+            {origin.posX + halfSize, origin.posY - halfSize, origin.posZ + halfSize}, // Base vertex 1
+            {origin.posX + halfSize, origin.posY - halfSize, origin.posZ - halfSize}, // Base vertex 2
+            {origin.posX - halfSize, origin.posY - halfSize, origin.posZ - halfSize}, // Base vertex 3
+            {origin.posX - halfSize, origin.posY - halfSize, origin.posZ + halfSize}  // Base vertex 4
+    };
+
+    GLColor colors[5] = {
+            {1.0f, 0.0f, 0.0f}, // Red
+            {0.0f, 1.0f, 0.0f}, // Green
+            {0.0f, 0.0f, 1.0f}, // Blue
+            {1.0f, 0.0f, 1.0f}, // Magenta
+            {1.0f, 1.0f, 0.0f}  // Yellow
+    };
+
+    int triangleIndices[4][3] = {
+            {0, 1, 2}, // Side triangle 1
+            {0, 2, 3}, // Side triangle 2
+            {0, 3, 4}, // Side triangle 3
+            {0, 4, 1}  // Side triangle 4
+    };
+
+    // Draw the base using the drawSquare function
+    GLPoint baseVertices[4] = {vertices[1], vertices[2], vertices[3], vertices[4]};
+    drawSquare(baseVertices, colors[0]);
+
+    // Draw the side triangles
+    for (int i = 1; i <= 4; i++) {
+        GLPoint triangle[3] = {
+                vertices[triangleIndices[i - 1][0]],
+                vertices[triangleIndices[i - 1][1]],
+                vertices[triangleIndices[i - 1][2]]
+        };
+        drawTriangle(triangle, colors[i]);
+    }
 }
