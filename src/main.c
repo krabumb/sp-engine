@@ -4,18 +4,11 @@
 #include <GL/glut.h>
 #endif
 
-#include <stdio.h>
-
 typedef struct GLPoint {
     GLfloat posX;
     GLfloat posY;
     GLfloat posZ;
 } GLPoint;
-
-typedef struct GLVector {
-    GLPoint a;
-    GLPoint b;
-} GLVector;
 
 typedef struct GLColor {
     GLfloat r;
@@ -120,7 +113,7 @@ void reshape(int w, int h) {
     glLoadIdentity();
 }
 
-void timer(int value) {
+void timer(__attribute__((unused)) int ignored) {
     angleX += 1.0f;
     angleY += 1.0f;
 
