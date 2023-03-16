@@ -13,7 +13,7 @@ void display() {
 
     GLPoint origin1 = {0.0f, 0.0f, 0.0f};
     GLfloat size = 1.0f;
-    drawCube(origin1, size);
+    drawPyramidBase3(origin1, size);
 
     glutSwapBuffers();
 }

@@ -69,3 +69,31 @@ void drawCube(GLPoint origin, GLfloat size) {
     GLPoint bottomFaceVertices[4] = { vertices[0], vertices[1], vertices[5], vertices[4] };
     drawSquare(bottomFaceVertices, colors[5]);
 }
+
+void drawPyramidBase3(GLPoint origin, GLfloat size){
+    float halfSize = size / 2.0f;
+    GLPoint triangleBase[3] = {
+            {origin.posX + halfSize,  origin.posY - halfSize, origin.posZ},
+            {origin.posX - halfSize, origin.posY - halfSize, origin.posZ - halfSize},
+            {origin.posX - halfSize, origin.posY - halfSize, origin.posZ + halfSize}
+    };
+    GLPoint triangleSideOne[3] = {
+            {origin.posX,  origin.posY + halfSize, origin.posZ},
+            {origin.posX - halfSize, origin.posY - halfSize, origin.posZ - halfSize},
+            {origin.posX - halfSize, origin.posY - halfSize, origin.posZ + halfSize}
+    };
+    GLPoint triangleSideTwo[3] = {
+            {origin.posX + halfSize,  origin.posY - halfSize, origin.posZ},
+            {origin.posX, origin.posY + halfSize, origin.posZ},
+            {origin.posX - halfSize, origin.posY - halfSize, origin.posZ + halfSize}
+    };
+    GLPoint triangleSideThree[3] = {
+            {origin.posX + halfSize,  origin.posY - halfSize, origin.posZ},
+            {origin.posX - halfSize, origin.posY - halfSize, origin.posZ - halfSize},
+            {origin.posX, origin.posY + halfSize, origin.posZ}
+    };
+    drawTriangle(triangleBase, (GLColor){1.0f, 0.0f, 0.0f});
+    drawTriangle(triangleSideOne, (GLColor){0.0f, 1.0f, 0.0f});
+    drawTriangle(triangleSideTwo, (GLColor){0.0f, 0.0f, 1.0f});
+    drawTriangle(triangleSideThree, (GLColor){1.0f, 0.0f, 1.0f});
+}
