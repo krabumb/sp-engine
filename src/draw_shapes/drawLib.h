@@ -34,3 +34,7 @@ void drawPyramidBase3(GLPoint origin, GLfloat size);
  * @param size
  */
 void drawPyramidBase4(GLPoint origin, GLfloat size);
+
+void drawCircle(GLPoint origin, GLfloat radius, GLfloat size_of_triangle_vertice);
+
+void drawSphere(GLPoint origin, GLfloat radius, GLfloat size_of_triangle_vertice);

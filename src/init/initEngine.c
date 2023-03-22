@@ -12,8 +12,9 @@ void display() {
     glRotatef(angleY, 0.0f, 1.0f, 0.0f);
 
     GLPoint origin1 = {0.0f, 0.0f, 0.0f};
-    GLfloat size = 1.0f;
-    drawPyramidBase4(origin1, size);
+    GLfloat size = 2.0f;
+
+    drawSphere(origin1, size, 0.01f); // Optimize this shit
 
     glutSwapBuffers();
 }

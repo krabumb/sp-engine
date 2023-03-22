@@ -1,11 +1,22 @@
 #include "drawLib.h"
+#include <math.h>
+#include <stdio.h>
+
+typedef struct SphereCache {
+    long size;
+    GLPoint** triangle1;
+    GLPoint** triangle2;
+} SphereCache;
+
+SphereCache sphereCache;
+char is_sphere_cached = 0;
 
 void drawTriangle(GLPoint vertices[3], GLColor color) {
     glBegin(GL_TRIANGLES);
     glColor3f(color.r, color.g, color.b);
-    for (int i = 0; i < 3; i++) {
-        glVertex3f(vertices[i].posX, vertices[i].posY, vertices[i].posZ);
-    }
+    glVertex3f(vertices[0].posX, vertices[0].posY, vertices[0].posZ);
+    glVertex3f(vertices[1].posX, vertices[1].posY, vertices[1].posZ);
+    glVertex3f(vertices[2].posX, vertices[2].posY, vertices[2].posZ);
     glEnd();
 }
 
@@ -143,4 +154,127 @@ void drawPyramidBase4(GLPoint origin, GLfloat size) {
         };
         drawTriangle(triangle, colors[i]);
     }
+}
+
+void drawCircle(GLPoint origin, GLfloat radius, GLfloat size_of_triangle_vertice) {
+    // Calculate the number of triangle vertices for a smooth circle
+    int num_triangle_vertices = (int)(2.0f * M_PI * radius / size_of_triangle_vertice);
+    GLfloat angle_increment = 2.0f * M_PI / num_triangle_vertices;
+    GLfloat angle;
+
+    // Color for the triangles
+    GLColor color = {0.5f, 0.5f, 0.5f};
+
+    for (int i = 0; i < num_triangle_vertices; i++) {
+        angle = i * angle_increment;
+
+        // Calculate the positions of the triangle vertices
+        GLPoint triangle_vertices[3] = {
+                origin,
+                {
+                        origin.posX + radius * cos(angle),
+                        origin.posY + radius * sin(angle),
+                        origin.posZ
+                },
+                {
+                        origin.posX + radius * cos(angle + angle_increment),
+                        origin.posY + radius * sin(angle + angle_increment),
+                        origin.posZ
+                }
+        };
+
+        // Draw the triangle
+        drawTriangle(triangle_vertices, color);
+    }
+}
+
+void drawSphere(GLPoint origin, GLfloat radius, GLfloat size_of_triangle_vertice) {
+
+    GLColor color1 = {1.0f, 0.0f, 0.0f};
+    GLColor color2 = {0.0f, 1.0f, 0.0f};
+
+    if (is_sphere_cached == 1) {
+        for (long i = 0; i < sphereCache.size; i++) {
+            drawTriangle(sphereCache.triangle1[i], color1);
+            drawTriangle(sphereCache.triangle2[i], color2);
+        }
+        printf("%ld\n", sphereCache.size);
+        return;
+    }
+
+    long num_latitude_segments = (long)(M_PI * radius / size_of_triangle_vertice);
+    long num_longitude_segments = (long)(2.0f * M_PI * radius / size_of_triangle_vertice);
+
+    long mallocation = num_latitude_segments*num_longitude_segments;
+
+    sphereCache.size = mallocation;
+    sphereCache.triangle1 = malloc(sizeof(GLPoint[mallocation][3]));
+    sphereCache.triangle2 = malloc(sizeof(GLPoint[mallocation][3]));
+
+    GLfloat lat_increment = M_PI / num_latitude_segments;
+    GLfloat lon_increment = 2.0f * M_PI / num_longitude_segments;
+    GLfloat lat_angle, lon_angle;
+
+    GLfloat sin_lat[num_latitude_segments + 1], cos_lat[num_latitude_segments + 1];
+    GLfloat sin_lon[num_longitude_segments + 1], cos_lon[num_longitude_segments + 1];
+
+    for (long lat_index = 0; lat_index <= num_latitude_segments; lat_index++) {
+        lat_angle = lat_index * lat_increment;
+        sin_lat[lat_index] = sin(lat_angle);
+        cos_lat[lat_index] = cos(lat_angle);
+    }
+
+    for (long lon_index = 0; lon_index <= num_longitude_segments; lon_index++) {
+        lon_angle = lon_index * lon_increment;
+        sin_lon[lon_index] = sin(lon_angle);
+        cos_lon[lon_index] = cos(lon_angle);
+    }
+
+    long indice = 0;
+    for (long lat_index = 0; lat_index < num_latitude_segments; lat_index++) {
+        for (long lon_index = 0; lon_index < num_longitude_segments; lon_index++) {
+            GLPoint vertices[4] = {
+                    {
+                            origin.posX + radius * sin_lat[lat_index] * cos_lon[lon_index],
+                            origin.posY + radius * sin_lat[lat_index] * sin_lon[lon_index],
+                            origin.posZ + radius * cos_lat[lat_index]
+                    },
+                    {
+                            origin.posX + radius * sin_lat[lat_index + 1] * cos_lon[lon_index],
+                            origin.posY + radius * sin_lat[lat_index + 1] * sin_lon[lon_index],
+                            origin.posZ + radius * cos_lat[lat_index + 1]
+                    },
+                    {
+                            origin.posX + radius * sin_lat[lat_index + 1] * cos_lon[lon_index + 1],
+                            origin.posY + radius * sin_lat[lat_index + 1] * sin_lon[lon_index + 1],
+                            origin.posZ + radius * cos_lat[lat_index + 1]
+                    },
+                    {
+                            origin.posX + radius * sin_lat[lat_index] * cos_lon[lon_index + 1],
+                            origin.posY + radius * sin_lat[lat_index] * sin_lon[lon_index + 1],
+                            origin.posZ + radius * cos_lat[lat_index]
+                    }
+            };
+
+            // Draw the first triangle
+            GLPoint* triangle1 = malloc(sizeof(GLPoint[3]));
+            triangle1[0] = vertices[0];
+            triangle1[1] = vertices[1];
+            triangle1[2] = vertices[2];
+            drawTriangle(triangle1, color1);
+            sphereCache.triangle1[indice] = triangle1;
+
+            // Draw the second triangle
+            GLPoint* triangle2 = malloc(sizeof(GLPoint[3]));
+            triangle2[0] = vertices[2];
+            triangle2[1] = vertices[3];
+            triangle2[2] = vertices[0];
+            drawTriangle(triangle2, color2);
+            sphereCache.triangle2[indice] = triangle2;
+
+            indice++;
+        }
+    }
+
+    is_sphere_cached = 1;
 }
