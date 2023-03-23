@@ -3,13 +3,30 @@
 #include <stdio.h>
 
 typedef struct SphereCache {
-    long size;
-    GLPoint** triangle1;
-    GLPoint** triangle2;
+    long num_vertices;
+    long num_indices;
+    GLfloat* vertices;
+    GLuint* indices;
 } SphereCache;
 
 SphereCache sphereCache;
 char is_sphere_cached = 0;
+
+GLuint sphereVBO;
+GLuint sphereIBO;
+char vboIboInit = 0;
+
+// Function to initialize the VBO and IBO
+void initSphereVBOandIBO() {
+    glGenBuffers(1, &sphereVBO);
+    glGenBuffers(1, &sphereIBO);
+}
+
+// Function to delete the VBO and IBO
+void deleteSphereVBOandIBO() {
+    glDeleteBuffers(1, &sphereVBO);
+    glDeleteBuffers(1, &sphereIBO);
+}
 
 void drawTriangle(GLPoint vertices[3], GLColor color) {
     glBegin(GL_TRIANGLES);
@@ -190,91 +207,86 @@ void drawCircle(GLPoint origin, GLfloat radius, GLfloat size_of_triangle_vertice
 
 void drawSphere(GLPoint origin, GLfloat radius, GLfloat size_of_triangle_vertice) {
 
-    GLColor color1 = {1.0f, 0.0f, 0.0f};
-    GLColor color2 = {0.0f, 1.0f, 0.0f};
+    if (vboIboInit == 0) {
+        initSphereVBOandIBO();
+        vboIboInit = 1;
+    }
 
-    if (is_sphere_cached == 1) {
-        for (long i = 0; i < sphereCache.size; i++) {
-            drawTriangle(sphereCache.triangle1[i], color1);
-            drawTriangle(sphereCache.triangle2[i], color2);
+    if (is_sphere_cached == 0) {
+        long num_latitude_segments = (long)(M_PI * radius / size_of_triangle_vertice);
+        long num_longitude_segments = (long)(2.0f * M_PI * radius / size_of_triangle_vertice);
+
+        long num_vertices = (num_latitude_segments + 1) * (num_longitude_segments + 1);
+        long num_indices = num_latitude_segments * num_longitude_segments * 6;
+
+        sphereCache.num_vertices = num_vertices;
+        sphereCache.num_indices = num_indices;
+        sphereCache.vertices = malloc(num_vertices * 3 * sizeof(GLfloat));
+        sphereCache.indices = malloc(num_indices * sizeof(GLuint));
+
+        GLfloat lat_increment = M_PI / num_latitude_segments;
+        GLfloat lon_increment = 2.0f * M_PI / num_longitude_segments;
+        GLfloat lat_angle, lon_angle;
+
+        // Calculate vertex data
+        for (long lat_index = 0; lat_index <= num_latitude_segments; lat_index++) {
+            lat_angle = lat_index * lat_increment;
+
+            for (long lon_index = 0; lon_index <= num_longitude_segments; lon_index++) {
+                lon_angle = lon_index * lon_increment;
+
+                long vertex_index = lat_index * (num_longitude_segments + 1) + lon_index;
+                sphereCache.vertices[vertex_index * 3 + 0] = origin.posX + radius * sin(lat_angle) * cos(lon_angle);
+                sphereCache.vertices[vertex_index * 3 + 1] = origin.posY + radius * sin(lat_angle) * sin(lon_angle);
+                sphereCache.vertices[vertex_index * 3 + 2] = origin.posZ + radius * cos(lat_angle);
+            }
         }
-        printf("%ld\n", sphereCache.size);
-        return;
-    }
 
-    long num_latitude_segments = (long)(M_PI * radius / size_of_triangle_vertice);
-    long num_longitude_segments = (long)(2.0f * M_PI * radius / size_of_triangle_vertice);
+        // Calculate index data
+        long index = 0;
+        for (long lat_index = 0; lat_index < num_latitude_segments; lat_index++) {
+            for (long lon_index = 0; lon_index < num_longitude_segments; lon_index++) {
+                GLuint vertex_a = lat_index * (num_longitude_segments + 1) + lon_index;
+                GLuint vertex_b = (lat_index + 1) * (num_longitude_segments + 1) + lon_index;
+                GLuint vertex_c = (lat_index + 1) * (num_longitude_segments + 1) + lon_index + 1;
+                GLuint vertex_d = lat_index * (num_longitude_segments + 1) + lon_index + 1;
 
-    long mallocation = num_latitude_segments*num_longitude_segments;
+                sphereCache.indices[index++] = vertex_a;
+                sphereCache.indices[index++] = vertex_b;
+                sphereCache.indices[index++] = vertex_c;
 
-    sphereCache.size = mallocation;
-    sphereCache.triangle1 = malloc(sizeof(GLPoint[mallocation][3]));
-    sphereCache.triangle2 = malloc(sizeof(GLPoint[mallocation][3]));
-
-    GLfloat lat_increment = M_PI / num_latitude_segments;
-    GLfloat lon_increment = 2.0f * M_PI / num_longitude_segments;
-    GLfloat lat_angle, lon_angle;
-
-    GLfloat sin_lat[num_latitude_segments + 1], cos_lat[num_latitude_segments + 1];
-    GLfloat sin_lon[num_longitude_segments + 1], cos_lon[num_longitude_segments + 1];
-
-    for (long lat_index = 0; lat_index <= num_latitude_segments; lat_index++) {
-        lat_angle = lat_index * lat_increment;
-        sin_lat[lat_index] = sin(lat_angle);
-        cos_lat[lat_index] = cos(lat_angle);
-    }
-
-    for (long lon_index = 0; lon_index <= num_longitude_segments; lon_index++) {
-        lon_angle = lon_index * lon_increment;
-        sin_lon[lon_index] = sin(lon_angle);
-        cos_lon[lon_index] = cos(lon_angle);
-    }
-
-    long indice = 0;
-    for (long lat_index = 0; lat_index < num_latitude_segments; lat_index++) {
-        for (long lon_index = 0; lon_index < num_longitude_segments; lon_index++) {
-            GLPoint vertices[4] = {
-                    {
-                            origin.posX + radius * sin_lat[lat_index] * cos_lon[lon_index],
-                            origin.posY + radius * sin_lat[lat_index] * sin_lon[lon_index],
-                            origin.posZ + radius * cos_lat[lat_index]
-                    },
-                    {
-                            origin.posX + radius * sin_lat[lat_index + 1] * cos_lon[lon_index],
-                            origin.posY + radius * sin_lat[lat_index + 1] * sin_lon[lon_index],
-                            origin.posZ + radius * cos_lat[lat_index + 1]
-                    },
-                    {
-                            origin.posX + radius * sin_lat[lat_index + 1] * cos_lon[lon_index + 1],
-                            origin.posY + radius * sin_lat[lat_index + 1] * sin_lon[lon_index + 1],
-                            origin.posZ + radius * cos_lat[lat_index + 1]
-                    },
-                    {
-                            origin.posX + radius * sin_lat[lat_index] * cos_lon[lon_index + 1],
-                            origin.posY + radius * sin_lat[lat_index] * sin_lon[lon_index + 1],
-                            origin.posZ + radius * cos_lat[lat_index]
-                    }
-            };
-
-            // Draw the first triangle
-            GLPoint* triangle1 = malloc(sizeof(GLPoint[3]));
-            triangle1[0] = vertices[0];
-            triangle1[1] = vertices[1];
-            triangle1[2] = vertices[2];
-            drawTriangle(triangle1, color1);
-            sphereCache.triangle1[indice] = triangle1;
-
-            // Draw the second triangle
-            GLPoint* triangle2 = malloc(sizeof(GLPoint[3]));
-            triangle2[0] = vertices[2];
-            triangle2[1] = vertices[3];
-            triangle2[2] = vertices[0];
-            drawTriangle(triangle2, color2);
-            sphereCache.triangle2[indice] = triangle2;
-
-            indice++;
+                sphereCache.indices[index++] = vertex_c;
+                sphereCache.indices[index++] = vertex_d;
+                sphereCache.indices[index++] = vertex_a;
+            }
         }
+
+        // Store the vertex data in VBO
+        glBindBuffer(GL_ARRAY_BUFFER, sphereVBO);
+        glBufferData(GL_ARRAY_BUFFER, sphereCache.num_vertices * 3 * sizeof(GLfloat), sphereCache.vertices, GL_STATIC_DRAW);
+
+        // Store the index data in IBO
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, sphereIBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sphereCache.num_indices * sizeof(GLuint), sphereCache.indices, GL_STATIC_DRAW);
+
+        is_sphere_cached = 1;
     }
 
-    is_sphere_cached = 1;
+    glEnableClientState(GL_VERTEX_ARRAY);
+
+    // Bind the sphere VBO and IBO
+    glBindBuffer(GL_ARRAY_BUFFER, sphereVBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, sphereIBO);
+
+    // Set the vertex pointer
+    glVertexPointer(3, GL_FLOAT, 0, 0);
+
+    // Draw the sphere using the index buffer object
+    glDrawElements(GL_TRIANGLES, sphereCache.num_indices, GL_UNSIGNED_INT, 0);
+
+    // Unbind the sphere VBO and IBO
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
 }

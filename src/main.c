@@ -7,7 +7,7 @@ int main(int argc, char **argv) {
     glutInitWindowSize(320,320);
     glutCreateWindow("SP Engine");
 
-    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     glutDisplayFunc(display);

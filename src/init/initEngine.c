@@ -14,7 +14,7 @@ void display() {
     GLPoint origin1 = {0.0f, 0.0f, 0.0f};
     GLfloat size = 2.0f;
 
-    drawSphere(origin1, size, 0.01f); // Optimize this shit
+    drawSphere(origin1, size, 0.02f); // Optimize this shit
 
     glutSwapBuffers();
 }

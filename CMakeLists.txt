@@ -13,16 +13,18 @@ endif()
 
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
+find_package(GLEW REQUIRED)
 
 include_directories(src)
-include_directories(${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS})
+include_directories(${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS} ${GLEW_INCLUDE_DIRS})
 
 add_executable(sp_engine src/main.c src/draw_shapes/drawLib.h src/draw_shapes/drawLib.c src/init/initEngine.c src/init/initEngine.h src/struct/structLib.h)
 
 target_link_libraries(sp_engine ${OPENGL_LIBRAIRIES})
 target_link_libraries(sp_engine ${GLUT_LIBRAIRIES})
+target_link_libraries(sp_engine ${GLEW_LIBRAIRIES})
 
-target_link_libraries(sp_engine -lfreeglut -lopengl32 -lglu32)
+target_link_libraries(sp_engine -lfreeglut -lopengl32 -lglu32 -lglew32)
 target_link_libraries(sp_engine -A x64)
 
 
